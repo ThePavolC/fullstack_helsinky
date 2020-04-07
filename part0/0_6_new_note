@@ -1,0 +1,29 @@
+note over browser:
+/spa page already loaded
+end note
+
+note over browser:
+User filles in input field
+and clicks Save button
+end note
+
+
+note over browser:
+onsubmit event is triggered and
+callback function is called.
+end note
+
+note over browser:
+Function adds new note to the list of notes.
+end note
+
+note over browser:
+Function redraws all notes.
+end note
+
+note over browser:
+Browser sends POST request to server.
+end note
+
+browser->server: HTTP POSTS https://fullstack-exampleapp.herokuapp.com/new_note_spa Content:{content: 'text', date: '2020-04-07T12:13:28.925Z'}
+
