@@ -3,12 +3,14 @@ import Persons from "./components/persons";
 import Filter from "./components/filter";
 import PersonForm from "./components/personForm";
 import personService from "./services/persons";
+import Notification from "./components/notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterWord, setNewFilterWord] = useState("");
+  const [notification, setNotification] = useState({ message: null });
 
   const reloadPersons = () =>
     personService.getAll().then((initialPersons) => {
@@ -35,7 +37,11 @@ const App = () => {
           (person) => person.name === newName
         );
         personService
-          .update(existingPerson.id, { ...existingPerson, number: newNumber })
+          .update(
+            existingPerson.id,
+            { ...existingPerson, number: newNumber },
+            setNotification
+          )
           .then(() => reloadPersons())
           .then(() => {
             setNewName("");
@@ -48,7 +54,7 @@ const App = () => {
     }
 
     const newPerson = { name: newName, number: newNumber };
-    personService.create(newPerson).then((returnPerson) => {
+    personService.create(newPerson, setNotification).then((returnPerson) => {
       setPersons(persons.concat(returnPerson));
       setNewName("");
       setNewNumber("");
@@ -66,7 +72,9 @@ const App = () => {
   };
   const onDeleteHandler = (person) => {
     if (window.confirm(`Delete ${person.name}?`)) {
-      personService.deletePerson(person.id).then(() => reloadPersons());
+      personService
+        .deletePerson(person, setNotification)
+        .then(() => reloadPersons());
     }
   };
 
@@ -88,6 +96,8 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
+
+      <Notification notification={notification} />
 
       <Filter
         filterWord={filterWord}
